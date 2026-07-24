@@ -35,32 +35,44 @@ Implementar un analizador lingüístico utilizando Stanford CoreNLP para identif
 
 ---
 
-## Procedimiento / Metodología (Enfoque Práctico Realizado)
+## Procedimiento / Metodología
 
-Para llevar a cabo esta práctica y permitir la comparación solicitada, se adoptó un enfoque que integra ambas herramientas de Procesamiento de Lenguaje Natural: por un lado, **spaCy** (utilizada como librería nativa importada directamente en nuestro backend de Python) y por otro lado **Stanford CoreNLP** (para la cual se descargó y ejecutó su servidor oficial en Java, comunicándonos con él mediante peticiones HTTP desde el backend). 
+Para el desarrollo de la práctica se implementó una arquitectura web (Cliente-Servidor) con un backend en Python (Flask) y un frontend en React (Vite). A continuación se detallan las actividades realizadas de acuerdo con la guía:
 
-Se desarrolló una arquitectura web (Cliente-Servidor) en lugar de una ejecución exclusiva en consola. Las actividades desarrolladas fueron las siguientes:
+### Actividad 1: Instalar Stanford CoreNLP y configurarlo para español
+Se instaló Java y se descargó el servidor oficial de Stanford CoreNLP junto con sus modelos en español (`es`). El servidor se ejecutó localmente para recibir peticiones HTTP desde el backend. Adicionalmente, se configuró un entorno virtual en Python con las librerías necesarias (`flask`, `spacy`, `requests`) y se implementó un servicio para procesar texto utilizando tanto Stanford CoreNLP como spaCy.
 
-### Actividad 1: Desarrollo del API Backend (Procesamiento NLP multilib)
-1. **Configuración del Entorno:** Se instaló Java y se descargó el servidor oficial de Stanford CoreNLP junto con sus modelos en español (`es`), dejándolo en ejecución en un puerto local de la máquina. Por la parte de Python, se creó un entorno virtual instalando dependencias como `flask`, `spacy` y `requests`.
-2. **Descarga de Modelos Python:** Se descargaron los modelos preentrenados en español para la librería spaCy (`es_core_news_sm`).
-3. **Desarrollo del Servicio NLP:** Se implementó una lógica en el backend (`NLPService`) que toma un texto y lo procesa utilizando ambas herramientas en paralelo: envía peticiones HTTP al servidor local de Stanford CoreNLP por un lado, y ejecuta el pipeline de la librería spaCy por el otro. De ambas formas se extraen: tokens, lemas, etiquetas POS (Parts of Speech), dependencias gramaticales y árboles sintácticos.
-4. **Clasificación Semántica:** Se incorporó un sistema de reglas lógicas en Python (basado en listas de conectores coordinados y subordinados) para identificar el tipo de oración compuesta y su relación semántica (ej. Causal, Copulativa, Condicional).
-5. **Creación de Endpoints:** Se expuso una ruta en Flask (`/api/nlp`) que recibe las oraciones en formato JSON y devuelve los resultados analizados.
+### Actividad 2: Analizar oraciones
+Se implementó una interfaz en el frontend para ingresar oraciones y enviarlas al backend. Se analizaron las siguientes oraciones compuestas:
+- María estudia porque mañana tiene un examen.
+- Pedro llegó y Ana salió.
+- Aunque llueve iremos al parque.
+- Si estudias aprobarás.
+- Juan cocina mientras Ana limpia.
 
-### Actividad 2: Desarrollo del Frontend (Interfaz de Usuario)
-1. **Inicialización:** Se creó un proyecto en React utilizando Vite para asegurar un empaquetado rápido y eficiente.
-2. **Diseño de UI:** Se diseñó una interfaz interactiva donde el usuario puede ingresar oraciones (tanto las de prueba de la guía como nuevas).
-3. **Integración con el API:** Se utilizó `fetch` para enviar el texto al backend y recibir la respuesta JSON.
-4. **Visualización de Datos:** Se crearon componentes para renderizar:
-   - Tablas detalladas para el Análisis Léxico (Token, Lema, POS).
-   - Estructuras visuales para el Árbol Sintáctico y las Dependencias.
-   - Un panel informativo con los resultados de la Clasificación Semántica (identificación del conector, tipo y subtipo).
+El sistema fue capaz de extraer y visualizar en pantalla para cada oración el **Token**, **POS** (Part of Speech), las **Dependencias** y el **Árbol sintáctico** generados.
 
-### Actividad 3: Pruebas y Validación (Actividades 2, 3, 4 y 5 de la guía)
-Se ingresaron las oraciones estipuladas en la guía a través del Frontend, verificando:
-- **Oraciones compuestas:** (Ej. "María estudia porque mañana tiene un examen", "Pedro llegó y Ana salió"). Se validó la correcta extracción del conector y su clasificación.
-- **Oraciones simples:** (Ej. "Pedro compró un automóvil"). Se verificó la correcta identificación del **sujeto** (Pedro), **verbo principal** (compró) y **objeto directo** (automóvil).
+### Actividad 3: Analizar oraciones simples
+Se ingresaron y procesaron las siguientes oraciones simples en el aplicativo:
+- Pedro compró un automóvil.
+- Ana cocina la cena.
+- Luis juega fútbol.
+
+Mediante el análisis de dependencias de Stanford CoreNLP, se pudo identificar automáticamente y responder los elementos clave en cada caso:
+- **¿Quién es el sujeto?:** (ej. Pedro, Ana, Luis) identificado mediante la dependencia `nsubj`.
+- **¿Cuál es el verbo principal?:** (ej. compró, cocina, juega) identificado como la raíz `root`.
+- **¿Cuál es el objeto directo?:** (ej. automóvil, cena, fútbol) identificado mediante la dependencia `obj`.
+
+### Actividad 4: Implementar reglas para identificar conectores
+En el backend se implementó un conjunto de reglas en Python para identificar conectores de acuerdo con la siguiente tabla:
+- **Coordinadas:** y, e, ni (Copulativas); o, u (Disyuntivas); pero, sin embargo (Adversativas).
+- **Subordinadas:** porque, ya que, puesto que (Causales); si (Condicional); aunque (Concesiva); mientras, cuando (Temporales); para que (Final); por lo tanto (Consecutiva).
+
+### Actividad 5: Clasificar automáticamente las oraciones
+A partir de las reglas implementadas, el sistema clasificó automáticamente las oraciones analizadas de acuerdo al conector detectado.
+Por ejemplo, al procesar "Pedro llegó y Ana salió.", el resultado generado por el sistema fue:
+- **Tipo:** Compuesta Coordinada
+- **Relación:** Copulativa
 
 ---
 
