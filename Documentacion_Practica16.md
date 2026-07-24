@@ -86,7 +86,7 @@ A continuación, se describen las imágenes que deben ser adjuntadas como eviden
 
 **2. Árbol Sintáctico**
 * **[Imagen: arbol_sintactico.png]** 
-* **Descripción:** Captura de la visualización del árbol sintáctico en la interfaz. Muestra cómo las palabras se agrupan jerárquicamente a partir de la raíz de la oración, reflejando la estructura profunda del lenguaje detectada por Stanza.
+* **Descripción:** Captura de la visualización del árbol sintáctico en la interfaz. Muestra cómo las palabras se agrupan jerárquicamente a partir de la raíz de la oración, reflejando la estructura profunda del lenguaje detectada por Stanford CoreNLP.
 
 **3. Dependencias**
 * **[Imagen: dependencias.png]** 
@@ -100,27 +100,27 @@ A continuación, se describen las imágenes que deben ser adjuntadas como eviden
 
 ## Actividad 6: Comparación entre spaCy y Stanford CoreNLP
 
-| Aspecto | spaCy | Stanford CoreNLP (Stanza) |
+| Aspecto | spaCy | Stanford CoreNLP (Servidor Java) |
 | :--- | :--- | :--- |
-| **Tiempo de ejecución** | **Rápido.** Diseñado para entornos de producción y optimizado con Cython. | **Lento.** Los modelos neuronales son pesados y tardan más en inicializar e inferir. |
+| **Tiempo de ejecución** | **Rápido.** Diseñado para entornos de producción y optimizado con Cython. | **Lento.** Requiere llamadas HTTP y procesamiento en un servidor externo (Java), lo que añade latencia en comparación con una librería nativa. |
 | **Precisión POS** | Alta, muy eficiente en tareas generales. | **Muy Alta.** Sobresale en estructuras complejas y análisis lingüístico profundo. |
 | **Árbol sintáctico** | Básico, centrado principalmente en dependencias (Dependency Parsing). | **Muy Detallado.** Soporta tanto dependencias como árboles de constituyentes (Constituency Parsing). |
 | **Dependencias** | Claras, usa el estándar Universal Dependencies, excelente para extracción de entidades. | Jerárquicas y muy específicas, ideal para estudios académicos y lingüísticos. |
-| **Facilidad de uso** | **Muy fácil.** Python nativo, API intuitiva e instalación sencilla de modelos. | **Moderada.** Su versión original requiere Java. Con `stanza` es más fácil en Python, pero los modelos ocupan mucho espacio. |
-| **Consumo de memoria** | **Bajo - Moderado.** Mantiene una huella en RAM manejable. | **Alto.** Requiere considerable memoria RAM y procesador para cargar y utilizar sus redes neuronales. |
+| **Facilidad de uso** | **Muy fácil.** Python nativo, API intuitiva e instalación sencilla de modelos. | **Moderada.** Requiere descargar, configurar y ejecutar un servidor Java independiente, además de establecer comunicación HTTP desde el backend, lo cual es más complejo que importar una librería. |
+| **Consumo de memoria** | **Bajo - Moderado.** Mantiene una huella en RAM manejable. | **Alto.** Requiere considerable memoria RAM y procesador para cargar y utilizar sus redes neuronales en el servidor. |
 
 ---
 
 ## Preguntas de Control
 
 **1. ¿Qué diferencias encontró entre spaCy y Stanford CoreNLP?**
-La principal diferencia radica en su enfoque: spaCy está construido pensando en la velocidad y la integración en entornos de producción (software comercial), priorizando la eficiencia computacional. Stanford CoreNLP (y su wrapper Stanza) tiene un enfoque más académico y de investigación, ofreciendo una mayor precisión y un análisis lingüístico mucho más profundo (como resolución de correferencias y árboles de constituyentes completos), pero a costa de consumir más recursos y tiempo de procesamiento.
+La principal diferencia radica en su enfoque: spaCy está construido pensando en la velocidad y la integración en entornos de producción (software comercial), priorizando la eficiencia computacional. Stanford CoreNLP (ejecutado mediante su servidor Java) tiene un enfoque más académico y de investigación, ofreciendo una mayor precisión y un análisis lingüístico mucho más profundo (como resolución de correferencias y árboles de constituyentes completos), pero a costa de consumir más recursos y tiempo de procesamiento.
 
 **2. ¿Cuál herramienta genera árboles sintácticos más detallados?**
 Stanford CoreNLP genera árboles sintácticos mucho más detallados. Mientras que spaCy se enfoca en el análisis de dependencias (relaciones entre palabras), Stanford es capaz de generar árboles de constituyentes complejos que muestran la estructura jerárquica completa de las frases (sintagmas nominales, sintagmas verbales, etc.) tal como se estipula en la teoría lingüística formal.
 
 **3. ¿Qué ventajas ofrece Stanford CoreNLP para el análisis lingüístico?**
-Ofrece una suite de anotadores sumamente robusta basada en redes neuronales entrenadas con inmensos corpus (Treebanks). Sus ventajas incluyen una precisión superior en el etiquetado morfosintáctico (POS) en oraciones ambiguas, un soporte exhaustivo de idiomas (a través de Stanza) y acceso a herramientas avanzadas que no están en todos los frameworks, como el análisis de sentimientos detallado, relaciones temporales y resolución de correferencias complejas.
+Ofrece una suite de anotadores sumamente robusta basada en redes neuronales entrenadas con inmensos corpus (Treebanks). Sus ventajas incluyen una precisión superior en el etiquetado morfosintáctico (POS) en oraciones ambiguas, un soporte exhaustivo de múltiples idiomas y acceso a herramientas avanzadas que no están en todos los frameworks, como el análisis de sentimientos detallado, relaciones temporales y resolución de correferencias complejas.
 
 **4. ¿Qué limitaciones presenta el enfoque basado en reglas para el análisis semántico?**
 El enfoque basado en reglas (if-else con listas de conectores) es rígido y no escala bien. Sus limitaciones incluyen:
@@ -145,6 +145,8 @@ Durante el desarrollo de esta práctica, se hizo uso de asistentes de Inteligenc
 ---
 
 ## Bibliografía
-- Materia semana 15. Guaman, Jose. 2026.
-- Qi, P., Zhang, Y., Zhang, Y., Bolton, J., & Manning, C. D. (2020). Stanza: A Python Natural Language Processing Toolkit for Many Human Languages.
-- Documentación oficial de Flask y React/Vite.
+[1] C. D. Manning, M. Surdeanu, J. Bauer, J. R. Finkel, S. Bethard, y D. McClosky, "The Stanford CoreNLP Natural Language Processing Toolkit," en Proceedings of 52nd Annual Meeting of the Association for Computational Linguistics: System Demonstrations, Baltimore, MD, USA, 2014, pp. 55–60.
+[2] M. Honnibal y M. Johnson, "An Improved Non-monotonic Transition System for Dependency Parsing," en Proceedings of the 2015 Conference on Empirical Methods in Natural Language Processing, Lisbon, Portugal, 2015, pp. 1373–1378.
+[3] M. Honnibal, I. Montani, S. Van Landeghem, y A. Boyd, "spaCy: Industrial-strength Natural Language Processing in Python," Zenodo, 2020, doi: 10.5281/zenodo.1212303.
+[4] Materia semana 15. Guaman, Jose. 2026.
+[5] Documentación oficial de Flask y React/Vite.
